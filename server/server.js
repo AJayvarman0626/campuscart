@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 
 // ---------- Define Allowed Origins ----------
 const allowedOrigins = [
-  "https://campuscart-crko.onrender.com", // your current frontend (Render)
+  "https://campuscart-fl2c.onrender.com", // your current frontend (Render)
   "https://campuscart-2-0.onrender.com",  // backup Render URL (optional)
   "http://localhost:5173",                // dev environment
 ];
