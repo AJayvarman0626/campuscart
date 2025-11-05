@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 
-const ENDPOINT = "https://campuscart-server.onrender.com";
+const ENDPOINT = "https://campuscart-service.onrender.com";
 const LAST_SEEN_KEY = "campuscart_lastSeenMessages";
 
 const ChatList = () => {

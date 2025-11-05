@@ -44,7 +44,7 @@ export default function Navbar() {
       try {
         const stored = JSON.parse(localStorage.getItem(LAST_SEEN_KEY)) || {};
         const res = await fetch(
-          `https://campuscart-server.onrender.com/api/chats`,
+          `https://campuscart-service.onrender.com/api/chats`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           }

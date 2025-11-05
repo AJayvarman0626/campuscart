@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 
-const ENDPOINT = "https://campuscart-server.onrender.com"; // ✅ backend URL
+const ENDPOINT = "https://campuscart-service.onrender.com"; // ✅ backend URL
 
 const ChatPage = () => {
   const { user } = useAuth();
