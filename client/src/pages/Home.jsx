@@ -1,36 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import cartLogo from "../assets/cart.png";
+import whiteLogo from "../assets/white.png";
 import { Moon, Sun } from "lucide-react";
 
 // ✅ Categories
 const categories = [
-  {
-    id: 1,
-    name: "Books",
-    icon: "📚",
-    color: "from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-600",
-  },
-  {
-    id: 2,
-    name: "Notes",
-    icon: "🧾",
-    color: "from-gray-200 to-gray-400 dark:from-gray-600 dark:to-gray-500",
-  },
-  {
-    id: 3,
-    name: "Gadgets",
-    icon: "⚙️",
-    color: "from-gray-300 to-gray-500 dark:from-gray-500 dark:to-gray-400",
-  },
-  {
-    id: 4,
-    name: "Lab Coat",
-    icon: "🥼",
-    color: "from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-600",
-  },
+  { id: 1, name: "Books", icon: "📚", color: "from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-600" },
+  { id: 2, name: "Notes", icon: "🧾", color: "from-gray-200 to-gray-400 dark:from-gray-600 dark:to-gray-500" },
+  { id: 3, name: "Gadgets", icon: "⚙️", color: "from-gray-300 to-gray-500 dark:from-gray-500 dark:to-gray-400" },
+  { id: 4, name: "Lab Coat", icon: "🥼", color: "from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-600" },
 ];
 
 const SearchIcon = (props) => (
@@ -57,17 +38,13 @@ const Home = () => {
   const [isDark, setIsDark] = useState(false);
   const [query, setQuery] = useState("");
 
-  // 🌗 Theme setup
+  // 🌗 Detect & apply theme
   useEffect(() => {
-    const updateTheme = () =>
-      setIsDark(document.documentElement.classList.contains("dark"));
-    updateTheme();
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => observer.disconnect();
+    const saved = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const darkMode = saved === "dark" || (!saved && prefersDark);
+    setIsDark(darkMode);
+    document.documentElement.classList.toggle("dark", darkMode);
   }, []);
 
   const toggleTheme = () => {
@@ -84,9 +61,7 @@ const Home = () => {
     navigate(`/explore?keyword=${encodeURIComponent(cleaned)}`);
   };
 
-  const goCategory = (categoryName) => {
-    navigate(`/explore?category=${encodeURIComponent(categoryName)}`);
-  };
+  const goCategory = (name) => navigate(`/explore?category=${encodeURIComponent(name)}`);
 
   return (
     <main
@@ -104,20 +79,44 @@ const Home = () => {
         {/* 📱 Mobile */}
         <div className="sm:hidden flex flex-col items-center justify-center mb-4">
           <h2 className="text-3xl font-extrabold mb-1">Welcome to</h2>
-          <div className="flex items-center gap-2">
-            <img
-              src={cartLogo}
-              alt="CampusCart Logo"
-              className="w-14 h-14 drop-shadow-md"
-            />
+          <div className="flex items-center gap-2 relative">
+            <motion.div
+              key={isDark ? "darkLogo" : "lightLogo"}
+              initial={{ rotateY: 90, opacity: 0 }}
+              animate={{ rotateY: 0, opacity: 1 }}
+              exit={{ rotateY: -90, opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="w-14 h-14"
+            >
+              <img
+                src={isDark ? whiteLogo : cartLogo}
+                alt="CampusCart Logo"
+                className="w-14 h-14 drop-shadow-md object-contain"
+              />
+            </motion.div>
             <h1 className="text-3xl font-black">CampusCart</h1>
           </div>
         </div>
 
         {/* 💻 Desktop */}
         <div className="hidden sm:block mb-4">
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-            Welcome to <span className="font-black">CampusCart</span>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight flex items-center justify-center gap-3">
+            Welcome to
+            <motion.div
+              key={isDark ? "darkDesktopLogo" : "lightDesktopLogo"}
+              initial={{ rotateY: 90, opacity: 0 }}
+              animate={{ rotateY: 0, opacity: 1 }}
+              exit={{ rotateY: -90, opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="inline-block w-10 h-10"
+            >
+              <img
+                src={isDark ? whiteLogo : cartLogo}
+                alt="CampusCart Logo"
+                className="w-10 h-10 drop-shadow-md object-contain"
+              />
+            </motion.div>
+            <span className="font-black">CampusCart</span>
           </h1>
         </div>
 
@@ -131,11 +130,7 @@ const Home = () => {
           } rounded-full px-4 py-2 shadow-sm sm:shadow-md transition-all`}
           role="search"
         >
-          <div
-            className={`flex items-center shrink-0 ${
-              isDark ? "text-gray-300" : "text-gray-600"
-            }`}
-          >
+          <div className={`flex items-center shrink-0 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
             <SearchIcon />
           </div>
 
@@ -201,26 +196,20 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 🌗 Responsive Floating Theme Toggle */}
+      {/* 🌗 Theme Toggle */}
       <motion.button
         onClick={toggleTheme}
         whileTap={{ scale: 0.9 }}
-        className={`fixed z-50 p-3 rounded-full shadow-lg border transition-all
-          ${
-            isDark
-              ? "bg-gray-100 text-black hover:bg-gray-200"
-              : "bg-gray-900 text-white hover:bg-gray-800"
-          }
-          bottom-20 right-5 sm:bottom-8 sm:right-8
-        `}
-        style={{
-          transition: "bottom 0.3s ease",
-        }}
+        className={`fixed z-50 p-3 rounded-full shadow-lg border transition-all ${
+          isDark
+            ? "bg-gray-100 text-black hover:bg-gray-200"
+            : "bg-gray-900 text-white hover:bg-gray-800"
+        } bottom-20 right-5 sm:bottom-8 sm:right-8`}
       >
         {isDark ? <Sun size={22} /> : <Moon size={22} />}
       </motion.button>
 
-      {/* FOOTER */}
+      {/* 🦶 Footer */}
       <footer
         className={`mt-14 mb-6 text-xs sm:text-sm ${
           isDark ? "text-gray-500" : "text-gray-600"
