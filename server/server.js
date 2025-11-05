@@ -1,4 +1,4 @@
-// server.js — CampusCart 2.0
+// server.js — CampusCart 2.0 (Render-Stable Final)
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -23,29 +23,50 @@ const server = http.createServer(app);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ---------- Define Allowed Origins ----------
+// ---------- Allowed Origins ----------
 const allowedOrigins = [
-  "https://campuscart-fl2c.onrender.com", // your current frontend (Render)
-  "https://campuscart-2-0.onrender.com",  // backup Render URL (optional)
-  "http://localhost:5173",                // dev environment
+  "https://campuscart-fl2c.onrender.com", // ✅ your current live frontend
+  "https://campuscart-crko.onrender.com", // old one
+  "https://campuscart-2-0.onrender.com",  // backup
+  "http://localhost:5173",                // dev
 ];
 
-// ---------- CORS for REST + Socket.io ----------
+// ---------- CORS (Render-Proof) ----------
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl)
+    origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.log("❌ Blocked by CORS:", origin);
+        console.warn("❌ Blocked by CORS:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
   })
 );
+
+// 🧩 Handle preflight requests (Render-safe)
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -76,13 +97,11 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("🟢 Socket connected:", socket.id);
 
-  // user joins chat room
   socket.on("joinChat", (userId) => {
     socket.join(userId);
     console.log(`👤 User joined room: ${userId}`);
   });
 
-  // message handling
   socket.on("sendMessage", (msg) => {
     if (msg?.receiver) io.to(msg.receiver).emit("newMessage", msg);
     if (msg?.sender) io.to(msg.sender).emit("newMessage", msg);
@@ -97,4 +116,5 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT} (CampusCart Chat Live)`);
+  console.log("✅ Allowed Origins:", allowedOrigins);
 });
