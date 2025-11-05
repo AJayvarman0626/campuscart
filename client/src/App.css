@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* 🌸 Global Theme */
+@theme {
+  --color-primary: #ec4899; /* pink-500 */
+  --color-secondary: #a78bfa; /* purple-400 */
+  --color-bg: #fff1f2; /* pink-50 */
+}
+
+/* 🌈 Base Styles */
+body {
+  @apply min-h-screen bg-gradient-to-br from-pink-100 via-white to-purple-100 text-gray-800 font-inter antialiased;
+}
+
+/* ✨ Scrollbar Aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #f472b6, #a78bfa);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #ec4899, #8b5cf6);
+}
+
+/* 🪞 Glassmorphism Utility */
+.glass-card {
+  @apply bg-white/80 backdrop-blur-md border border-white/30 shadow-lg;
+}
+
+/* 🌟 Smooth transition for all elements */
+* {
+  @apply transition-all duration-200 ease-out;
+}
