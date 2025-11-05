@@ -151,16 +151,7 @@ export default function Navbar() {
                   />
                 )}
               </button>
-            )}
-
-            {/* 🌗 Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-            >
-              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
-
+            )} 
             {/* Profile */}
             {user ? (
               <img

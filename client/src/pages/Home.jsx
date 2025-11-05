@@ -76,7 +76,7 @@ const Home = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-10 px-2 flex flex-col items-center justify-center"
       >
-        {/* 📱 Mobile */}
+        {/* 📱 Mobile (Logo Visible) */}
         <div className="sm:hidden flex flex-col items-center justify-center mb-4">
           <h2 className="text-3xl font-extrabold mb-1">Welcome to</h2>
           <div className="flex items-center gap-2 relative">
@@ -98,25 +98,10 @@ const Home = () => {
           </div>
         </div>
 
-        {/* 💻 Desktop */}
+        {/* 💻 Desktop (Text Only - No Logo) */}
         <div className="hidden sm:block mb-4">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight flex items-center justify-center gap-3">
-            Welcome to
-            <motion.div
-              key={isDark ? "darkDesktopLogo" : "lightDesktopLogo"}
-              initial={{ rotateY: 90, opacity: 0 }}
-              animate={{ rotateY: 0, opacity: 1 }}
-              exit={{ rotateY: -90, opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="inline-block w-10 h-10"
-            >
-              <img
-                src={isDark ? whiteLogo : cartLogo}
-                alt="CampusCart Logo"
-                className="w-10 h-10 drop-shadow-md object-contain"
-              />
-            </motion.div>
-            <span className="font-black">CampusCart</span>
+            Welcome to <span className="font-black">CampusCart</span>
           </h1>
         </div>
 
