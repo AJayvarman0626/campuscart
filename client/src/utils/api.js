@@ -1,14 +1,18 @@
 import axios from "axios";
 
+const baseURL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5000"
+    : import.meta.env.VITE_API_BASE_URL;
+
+console.log("🌍 API Base URL:", baseURL);
+
 const api = axios.create({
-  baseURL:
-    import.meta.env.MODE === "development"
-      ? "http://localhost:5000" // 🧑‍💻 Local backend for dev
-      : "https://campuscart-service.onrender.com/", // ☁️ Live backend
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: false, // ✅ Prevents CORS cookie issues unless needed
+  withCredentials: false,
 });
 
 export default api;
