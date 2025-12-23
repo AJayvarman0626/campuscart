@@ -370,6 +370,16 @@ const Dashboard = () => {
         >
           🛍️ Become a Seller
         </motion.button>
+        {/* 🛒 Go to Cart */}
+<motion.button
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  onClick={() => navigate("/cart")}
+  className="mt-3 w-full border border-gray-400 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 rounded-xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+>
+  🛒 View Cart
+</motion.button>
+
 
         {/* 🚪 Logout Modal */}
         {logoutConfirm && (

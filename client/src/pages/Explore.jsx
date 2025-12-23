@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 
+/* 🔍 Search Icon */
 const SearchIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -22,6 +23,23 @@ const SearchIcon = (props) => (
   </svg>
 );
 
+/* 🔲 Skeleton Card */
+const ProductSkeleton = ({ isDark }) => (
+  <div
+    className={`rounded-xl border overflow-hidden w-[92%] sm:w-[85%] md:w-[80%] lg:w-[75%]
+    ${isDark ? "border-gray-700 bg-[#1d1d1d]" : "border-gray-200 bg-white"}`}
+  >
+    <div className="w-full h-32 sm:h-40 md:h-48 animate-pulse bg-gray-300/60 dark:bg-gray-700" />
+    <div className="p-3 space-y-2">
+      <div className="h-4 w-3/4 mx-auto rounded bg-gray-300/60 dark:bg-gray-700 animate-pulse" />
+      <div className="h-3 w-full rounded bg-gray-300/60 dark:bg-gray-700 animate-pulse" />
+      <div className="h-3 w-5/6 mx-auto rounded bg-gray-300/60 dark:bg-gray-700 animate-pulse" />
+      <div className="h-4 w-20 mx-auto rounded bg-gray-300/60 dark:bg-gray-700 animate-pulse" />
+      <div className="h-8 w-24 mx-auto rounded bg-gray-300/60 dark:bg-gray-700 animate-pulse" />
+    </div>
+  </div>
+);
+
 const Explore = () => {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
@@ -35,7 +53,7 @@ const Explore = () => {
   const category = searchParams.get("category");
   const keyword = searchParams.get("keyword");
 
-  // 🌗 Dark/light mode detection
+  /* 🌗 Theme Sync */
   useEffect(() => {
     const updateTheme = () =>
       setIsDark(document.documentElement.classList.contains("dark"));
@@ -48,7 +66,7 @@ const Explore = () => {
     return () => observer.disconnect();
   }, []);
 
-  // 🧠 Fetch products
+  /* 🧠 Fetch Products */
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -60,8 +78,7 @@ const Explore = () => {
           : "";
         const { data } = await api.get(`/api/products${queryParam}`);
         setProducts(Array.isArray(data) ? data : data.products || []);
-      } catch (err) {
-        console.error("Failed to load products", err);
+      } catch {
         setProducts([]);
       } finally {
         setLoading(false);
@@ -70,31 +87,23 @@ const Explore = () => {
     fetchProducts();
   }, [category, keyword]);
 
-  // 🔍 Handle search
+  /* 🔍 Search */
   const handleSearch = (e) => {
     e.preventDefault();
-    const cleaned = query.trim();
-    if (!cleaned) return;
-    navigate(`/explore?keyword=${encodeURIComponent(cleaned)}`);
+    if (!query.trim()) return;
+    navigate(`/explore?keyword=${encodeURIComponent(query.trim())}`);
   };
 
-  // 🧭 Handle product click (with login guard)
-  const handleProductClick = (productId) => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      navigate(`/product/${productId}`);
-    }
+  /* 🔐 Product Click */
+  const handleProductClick = (id) => {
+    if (!user) navigate("/login");
+    else navigate(`/product/${id}`);
   };
 
-  // 💤 Empty state
+  /* 💤 Empty State */
   const renderEmpty = () => (
     <div className="flex flex-col items-center justify-center text-center py-16">
-      <p
-        className={`text-base sm:text-lg ${
-          isDark ? "text-gray-400" : "text-gray-600"
-        }`}
-      >
+      <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
         {keyword || category
           ? "No products found for your search 🔍"
           : "No products listed yet. Be the first to post!"}
@@ -102,10 +111,8 @@ const Explore = () => {
       {!user && (
         <button
           onClick={() => navigate("/register")}
-          className={`mt-4 px-5 py-2 rounded-lg font-semibold transition-all ${
-            isDark
-              ? "bg-gray-100 text-black hover:bg-gray-200"
-              : "bg-gray-900 text-white hover:bg-gray-800"
+          className={`mt-4 px-5 py-2 rounded-lg font-semibold ${
+            isDark ? "bg-gray-100 text-black" : "bg-gray-900 text-white"
           }`}
         >
           Register & List Your Item
@@ -116,51 +123,31 @@ const Explore = () => {
 
   return (
     <main
-      className={`min-h-screen transition-colors duration-500 pb-20 ${
+      className={`min-h-screen pb-20 transition-colors ${
         isDark ? "bg-[#171717] text-gray-100" : "bg-white text-gray-900"
       }`}
     >
-      {/* 🔍 Sticky Search Bar */}
+      {/* 🔍 Sticky Search */}
       <div
-        className={`fixed top-0 left-0 w-full z-40 px-4 sm:px-6 py-3 backdrop-blur-md border-b ${
-          isDark
-            ? "bg-[#171717]/80 border-gray-800"
-            : "bg-white/80 border-gray-200"
-        }`}
+        className={`fixed top-0 left-0 w-full z-40 px-4 py-3 backdrop-blur-md border-b
+        ${isDark ? "bg-[#171717]/80 border-gray-800" : "bg-white/80 border-gray-200"}`}
       >
         <form
           onSubmit={handleSearch}
-          className={`flex items-center gap-2 w-full max-w-3xl mx-auto ${
-            isDark ? "bg-white/10" : "bg-white/90"
-          } backdrop-blur-md border ${
-            isDark ? "border-gray-700" : "border-gray-200"
-          } rounded-full px-4 py-2 shadow-sm sm:shadow-md transition-all`}
+          className={`flex items-center gap-2 max-w-3xl mx-auto rounded-full px-4 py-2 border
+          ${isDark ? "bg-white/10 border-gray-700" : "bg-white border-gray-200"}`}
         >
-          <div
-            className={`flex items-center shrink-0 ${
-              isDark ? "text-gray-300" : "text-gray-600"
-            }`}
-          >
-            <SearchIcon />
-          </div>
-
+          <SearchIcon />
           <input
-            type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search books, notes, gadgets, lab coats..."
-            className={`flex-1 bg-transparent outline-none text-sm sm:text-base ${
-              isDark
-                ? "text-gray-100 placeholder:text-gray-400"
-                : "text-gray-800 placeholder:text-gray-500"
-            }`}
+            placeholder="Search books, notes, gadgets..."
+            className="flex-1 bg-transparent outline-none text-sm"
           />
-
           <button
-            type="submit"
-            className={`ml-2 rounded-full px-4 py-1.5 text-sm font-medium ${
+            className={`px-4 py-1.5 rounded-full text-sm ${
               isDark ? "bg-gray-100 text-black" : "bg-gray-900 text-white"
-            } hover:opacity-95 transition-all`}
+            }`}
           >
             Go
           </button>
@@ -168,114 +155,67 @@ const Explore = () => {
       </div>
 
       {/* 🏷️ Header */}
-      <div className="pt-24 text-center mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+      <div className="pt-24 text-center mb-8">
+        <h1 className="text-2xl font-bold">
           {category
             ? `Explore ${category}`
             : keyword
             ? `Results for “${keyword}”`
             : "Explore All Products"}
         </h1>
-        <p
-          className={`mt-1 text-sm sm:text-base ${
-            isDark ? "text-gray-400" : "text-gray-600"
-          }`}
-        >
-          Discover used books, notes, and gadgets from your campus.
+        <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
+          Discover used items from your campus.
         </p>
       </div>
 
-      {/* 🌀 Loader */}
-      {loading && (
-        <div className="flex justify-center py-20">
-          <div className="w-8 h-8 border-4 border-t-transparent border-gray-400 rounded-full animate-spin"></div>
-        </div>
-      )}
-
-      {/* 🧱 Product Grid */}
-      {!loading && (
-        <section className="w-full max-w-7xl mx-auto mb-10 px-4 sm:px-6">
-          {products.length === 0 ? (
-            renderEmpty()
-          ) : (
-            <div
-              className="
-                grid
-                grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4
-                gap-3 sm:gap-4
-                place-items-center
-              "
-            >
-              {products.map((product, i) => (
-                <motion.div
-                  key={product._id || i}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.04 }}
-                  whileHover={{ scale: 1.03 }}
-                  onClick={() => handleProductClick(product._id)} // ✅ added login check here
-                  className={`rounded-xl border overflow-hidden ${
-                    isDark
-                      ? "border-gray-700 bg-[#1d1d1d]"
-                      : "border-gray-200 bg-white"
-                  } shadow-md hover:shadow-lg transition-all cursor-pointer w-[92%] sm:w-[85%] md:w-[80%] lg:w-[75%]`}
-                >
-                  {/* 🖼️ Product Image */}
-                  <div className="w-full h-32 sm:h-40 md:h-48 overflow-hidden">
-                    <img
-                      src={
-                        product.image ||
-                        "https://cdn-icons-png.flaticon.com/512/679/679720.png"
-                      }
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                    />
-                  </div>
-
-                  {/* 📄 Product Info */}
-                  <div className="p-3 text-center">
-                    <h3 className="text-sm sm:text-base font-semibold truncate">
-                      {product.name}
-                    </h3>
-                    <p
-                      className={`text-xs sm:text-sm mt-1 line-clamp-2 ${
-                        isDark ? "text-gray-400" : "text-gray-600"
-                      }`}
-                    >
-                      {product.description}
-                    </p>
-
-                    <div className="mt-2 flex flex-col items-center">
-                      <p
-                        className={`text-sm sm:text-base font-bold ${
-                          isDark ? "text-gray-200" : "text-gray-900"
-                        }`}
-                      >
-                        ₹{product.price?.toFixed(2) || "N/A"}
-                      </p>
-                      {product.isSold && (
-                        <p className="mt-1 text-xs sm:text-sm text-red-500 font-semibold">
-                          🔒 Sold Out
-                        </p>
-                      )}
-                    </div>
-
-                    <button
-                      className={`mt-3 text-xs sm:text-sm px-4 py-1.5 rounded-lg font-medium transition-all ${
-                        isDark
-                          ? "bg-gray-100 text-black hover:bg-gray-200"
-                          : "bg-gray-900 text-white hover:bg-gray-800"
-                      }`}
-                    >
-                      View
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </section>
-      )}
+      {/* 🧱 Grid */}
+      <section className="max-w-7xl mx-auto px-4">
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 place-items-center">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <ProductSkeleton key={i} isDark={isDark} />
+            ))}
+          </div>
+        ) : products.length === 0 ? (
+          renderEmpty()
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 place-items-center">
+            {products.map((product, i) => (
+              <motion.div
+                key={product._id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04 }}
+                whileHover={{ scale: 1.03 }}
+                onClick={() => handleProductClick(product._id)}
+                className={`cursor-pointer rounded-xl border overflow-hidden w-[92%] sm:w-[85%] md:w-[80%] lg:w-[75%]
+                ${isDark ? "border-gray-700 bg-[#1d1d1d]" : "border-gray-200 bg-white"}`}
+              >
+                <div className="h-32 sm:h-40 md:h-48 overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover hover:scale-110 transition"
+                  />
+                </div>
+                <div className="p-3 text-center">
+                  <h3 className="font-semibold truncate">{product.name}</h3>
+                  <p className="text-sm text-gray-500 line-clamp-2">
+                    {product.description}
+                  </p>
+                  <p className="font-bold mt-2">₹{product.price}</p>
+                  {product.isSold && (
+                    <p className="text-xs text-red-500 mt-1">🔒 Sold Out</p>
+                  )}
+                  <button className="mt-3 px-4 py-1.5 text-sm rounded bg-gray-900 text-white">
+                    View
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
 };

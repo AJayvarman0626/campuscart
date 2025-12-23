@@ -30,7 +30,19 @@ const productSchema = new mongoose.Schema(
       required: [true, "Category is required"],
       enum: ["Books", "Notes", "Gadgets", "Lab Coat"],
     },
-
+    // 🎓 Regulation (Academic Regulation)
+    regulation: {
+      type: String,
+      required: [true, "Regulation is required"],
+      enum: ["2021", "2025"],
+    },
+    // 📘 Semester (1 to 8)
+    semester: {
+      type: Number,
+      required: [true, "Semester is required"],
+      min: [1, "Semester must be between 1 and 8"],
+      max: [8, "Semester must be between 1 and 8"],
+    },
     // 🖼️ Product Image (Cloudinary URL)
     image: {
       type: String,

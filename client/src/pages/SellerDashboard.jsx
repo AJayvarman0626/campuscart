@@ -10,12 +10,15 @@ const SellerDashboard = () => {
 
   const [isDark, setIsDark] = useState(false);
   const [product, setProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    category: "",
-    image: null,
-  });
+  name: "",
+  description: "",
+  price: "",
+  category: "",
+  regulation: "",
+  semester: "",
+  image: null,
+});
+
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [products, setProducts] = useState([]);
@@ -108,6 +111,8 @@ const SellerDashboard = () => {
         description: "",
         price: "",
         category: "",
+        regulation: "",
+        semester: "",
         image: null,
       });
       setPreview(null);
@@ -229,6 +234,46 @@ const SellerDashboard = () => {
               }`}
               required
             />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  {/* 🎓 Regulation */}
+  <select
+    value={product.regulation}
+    onChange={(e) =>
+      setProduct({ ...product, regulation: e.target.value })
+    }
+    required
+    className={`w-full p-3 rounded-xl border outline-none focus:ring-2 ${
+      isDark
+        ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-gray-600"
+        : "bg-gray-100 border-gray-300 text-gray-800 focus:ring-gray-400"
+    }`}
+  >
+    <option value="">Select Regulation</option>
+    <option value="2021">2021</option>
+    <option value="2025">2025</option>
+  </select>
+
+  {/* 📘 Semester */}
+  <select
+    value={product.semester}
+    onChange={(e) =>
+      setProduct({ ...product, semester: e.target.value })
+    }
+    required
+    className={`w-full p-3 rounded-xl border outline-none focus:ring-2 ${
+      isDark
+        ? "bg-gray-800 border-gray-700 text-gray-100 focus:ring-gray-600"
+        : "bg-gray-100 border-gray-300 text-gray-800 focus:ring-gray-400"
+    }`}
+  >
+    <option value="">Select Semester</option>
+    {[1,2,3,4,5,6,7,8].map((s) => (
+      <option key={s} value={s}>
+        Semester {s}
+      </option>
+    ))}
+  </select>
+</div>
 
             {/* 🎨 Category Dropdown (Aesthetic + Fixed Lab Coat) */}
             <div className="relative">
