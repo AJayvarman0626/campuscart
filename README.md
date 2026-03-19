@@ -51,7 +51,7 @@ What makes it different from a generic marketplace:
 
 | Service | URL |
 |--------|-----|
-| 🌐 Frontend | [campuscart.onrender.com](https://campuscart.onrender.com) |
+| 🌐 Frontend | [campuscart.onrender.com](https://campuscart-fl2c.onrender .com) |
 | ⚙️ Backend API | [campuscart-service.onrender.com](https://campuscart-service.onrender.com) |
 | 🧠 ML Service | [campus-cart-ml.onrender.com](https://campus-cart-ml.onrender.com) |
 
