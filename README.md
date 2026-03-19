@@ -194,6 +194,4 @@ uvicorn app.main:app --reload
 
 **Ajayvarman**
 MERN Stack Developer
-Built with ❤️, patience, and lots of debugging.
-
 ---
