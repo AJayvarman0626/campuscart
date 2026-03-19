@@ -11,7 +11,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-brightgreen?style=for-the-badge)](https://campuscart.onrender.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-brightgreen?style=for-the-badge)](https://campuscart-fl2c.onrender.com)
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 </div>
@@ -51,7 +51,7 @@ What makes it different from a generic marketplace:
 
 | Service | URL |
 |--------|-----|
-| 🌐 Frontend | [campuscart.onrender.com](https://campuscart-fl2c.onrender .com) |
+| 🌐 Frontend | [campuscart.onrender.com](https://campuscart-fl2c.onrender.com) |
 | ⚙️ Backend API | [campuscart-service.onrender.com](https://campuscart-service.onrender.com) |
 | 🧠 ML Service | [campus-cart-ml.onrender.com](https://campus-cart-ml.onrender.com) |
 
